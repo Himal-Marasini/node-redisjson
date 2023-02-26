@@ -1,9 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const { Client, Repository } = require("redis-om");
-const { taskSchema } = require("./schema/task.schema.js");
+require("dotenv").config({ path: ".env" });
+
+const taskRepository = require("./schema/task.schema");
 
 const app = express();
+
 app.use(express.json());
 app.use(
   cors({
@@ -11,27 +13,9 @@ app.use(
   })
 );
 
-const client = new Client();
-
-(async()=>{
-    await client.open(
-        ""
-      );
-})()
-
-console.log(client)
-
-
-const taskRepository = new Repository(taskSchema, client);
-
-(async()=>{
-await taskRepository.dropIndex();
-await taskRepository.createIndex();
-})()
-
-
 app.get("/tasks", async (req, res) => {
-  res.send(await taskRepository.search().returnAll());
+  const task = await taskRepository.search().returnAll();
+  res.send(task);
 });
 
 app.post("/tasks", async (req, res) => {
@@ -43,7 +27,7 @@ app.post("/tasks", async (req, res) => {
 
   res.send(task);
 });
-s
+
 app.put("/tasks/:id", async (req, res) => {
   const task = await taskRepository.fetch(req.params.id);
 
@@ -60,5 +44,5 @@ app.delete("/tasks/:id", async (req, res) => {
 });
 
 app.listen(8000, () => {
-  console.log("App");
+  console.log("App is running at port 8000 !!");
 });
