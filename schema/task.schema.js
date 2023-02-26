@@ -1,4 +1,4 @@
-import {Entity, Schema} from "redis-om";
+const {Entity, Schema} = require("redis-om");
 
 class Task extends Entity {
     toJSON() {
@@ -10,7 +10,7 @@ class Task extends Entity {
     }
 }
 
-export const taskSchema = new Schema(Task, {
+const taskSchema = new Schema(Task, {
     name: {
         type: 'string'
     },
@@ -20,3 +20,5 @@ export const taskSchema = new Schema(Task, {
 }, {
     dataStructure: 'JSON'
 });
+
+module.exports = taskSchema
